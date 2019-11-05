@@ -1,12 +1,12 @@
 /**
  * Build styles
  */
-require('./index.css').toString();
+require('./index.css').toString()
 
 /**
  * Require polyfills
  */
-require('./polyfills.js');
+require('./polyfills.js')
 
 /**
  * @typedef {object} ChecklistData
@@ -23,7 +23,7 @@ class Checklist {
    * @public
    */
   static get enableLineBreaks() {
-    return true;
+    return true
   }
 
   /**
@@ -35,9 +35,10 @@ class Checklist {
    */
   static get toolbox() {
     return {
-      icon: '<svg width="17" height="17" viewBox="0 0 15 15" xmlns="http://www.w3.org/2000/svg"><path d="M7.5 15a7.5 7.5 0 1 1 0-15 7.5 7.5 0 0 1 0 15zm0-2.394a5.106 5.106 0 1 0 0-10.212 5.106 5.106 0 0 0 0 10.212zm-.675-4.665l2.708-2.708 1.392 1.392-2.708 2.708-1.392 1.391-2.971-2.971L5.245 6.36l1.58 1.58z"/></svg>',
-      title: this.i18n === "en" ? 'Checklist': "待办项"
-    };
+      icon:
+        '<svg width="17" height="16" t="1572966598141" class="icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="16212" width="200" height="200"><path d="M512 0C228.571429 0 0 228.571429 0 512s228.571429 512 512 512 512-228.571429 512-512S795.428571 0 512 0z m257.828571 400.457143L484.571429 682.057143c-9.142857 9.142857-20.114286 12.8-31.085715 12.8s-23.771429-3.657143-32.914285-12.8l-166.4-164.571429c-18.285714-18.285714-18.285714-47.542857 0-64 18.285714-18.285714 47.542857-18.285714 64 0l133.485714 131.657143 252.342857-248.685714c18.285714-18.285714 47.542857-18.285714 64 0 20.114286 18.285714 20.114286 47.542857 1.828571 64z" p-id="16213"></path></svg>',
+      title: this.i18n === 'en' ? 'Checklist' : '待办项',
+    }
   }
 
   /**
@@ -46,27 +47,27 @@ class Checklist {
    * @param {object} config - user config for Tool
    * @param {object} api - Editor.js API
    */
-  constructor({data, config, api}) {
+  constructor({ data, config, api }) {
     /**
      * HTML nodes
      * @private
      */
     this._elements = {
-      wrapper : null,
-      items : []
-    };
+      wrapper: null,
+      items: [],
+    }
 
     /**
      * Tool's data
      * @type {ChecklistData}
      * */
     this._data = {
-      items: []
-    };
+      items: [],
+    }
 
-    this.api = api;
-    this.i18n = config.i18n || "en"
-    this.data = data;
+    this.api = api
+    this.i18n = config.i18n || 'en'
+    this.data = data
   }
 
   /**
@@ -75,42 +76,49 @@ class Checklist {
    * @public
    */
   render() {
-    this._elements.wrapper = this._make('div', [this.CSS.baseBlock, this.CSS.wrapper]);
+    this._elements.wrapper = this._make('div', [
+      this.CSS.baseBlock,
+      this.CSS.wrapper,
+    ])
 
     // fill with data
     if (this._data.items.length) {
       this._data.items.forEach(item => {
-        const newItem = this.createChecklistItem(item);
+        const newItem = this.createChecklistItem(item)
 
-        this._elements.items.push(newItem);
-        this._elements.wrapper.appendChild(newItem);
-      });
+        this._elements.items.push(newItem)
+        this._elements.wrapper.appendChild(newItem)
+      })
     } else {
-      const newItem = this.createChecklistItem();
+      const newItem = this.createChecklistItem()
 
-      this._elements.items.push(newItem);
-      this._elements.wrapper.appendChild(newItem);
+      this._elements.items.push(newItem)
+      this._elements.wrapper.appendChild(newItem)
     }
 
     // add event-listeners
-    this._elements.wrapper.addEventListener('keydown', (event) => {
-      const [ENTER, BACKSPACE] = [13, 8]; // key codes
+    this._elements.wrapper.addEventListener(
+      'keydown',
+      event => {
+        const [ENTER, BACKSPACE] = [13, 8] // key codes
 
-      switch (event.keyCode) {
-        case ENTER:
-          this.appendNewElement(event);
-          break;
-        case BACKSPACE:
-          this.backspace(event);
-          break;
-      }
-    }, false);
+        switch (event.keyCode) {
+          case ENTER:
+            this.appendNewElement(event)
+            break
+          case BACKSPACE:
+            this.backspace(event)
+            break
+        }
+      },
+      false
+    )
 
-    this._elements.wrapper.addEventListener('click', (event) => {
-      this.toggleCheckbox(event);
-    });
+    this._elements.wrapper.addEventListener('click', event => {
+      this.toggleCheckbox(event)
+    })
 
-    return this._elements.wrapper;
+    return this._elements.wrapper
   }
 
   /**
@@ -121,7 +129,7 @@ class Checklist {
    * @public
    */
   validate(savedData) {
-    return !!savedData.items.length;
+    return !!savedData.items.length
   }
 
   /**
@@ -129,11 +137,11 @@ class Checklist {
    * @param event
    */
   toggleCheckbox(event) {
-    const checkListItem = event.target.closest(`.${this.CSS.item}`);
-    const checkbox = checkListItem.querySelector(`.${this.CSS.checkbox}`);
+    const checkListItem = event.target.closest(`.${this.CSS.item}`)
+    const checkbox = checkListItem.querySelector(`.${this.CSS.checkbox}`)
 
     if (checkbox.contains(event.target)) {
-      checkListItem.classList.toggle(this.CSS.itemChecked);
+      checkListItem.classList.toggle(this.CSS.itemChecked)
     }
   }
 
@@ -143,23 +151,23 @@ class Checklist {
    * @return {HTMLElement} checkListItem - new element of checklist
    */
   createChecklistItem(item = {}) {
-    const checkListItem = this._make('div', this.CSS.item);
+    const checkListItem = this._make('div', this.CSS.item)
 
-    const checkbox = this._make('span', this.CSS.checkbox);
+    const checkbox = this._make('span', this.CSS.checkbox)
 
     const textField = this._make('div', this.CSS.textField, {
       innerHTML: item.text ? item.text : '',
-      contentEditable: true
-    });
+      contentEditable: true,
+    })
 
     if (item.checked) {
-      checkListItem.classList.add(this.CSS.itemChecked);
+      checkListItem.classList.add(this.CSS.itemChecked)
     }
 
-    checkListItem.appendChild(checkbox);
-    checkListItem.appendChild(textField);
+    checkListItem.appendChild(checkbox)
+    checkListItem.appendChild(textField)
 
-    return checkListItem;
+    return checkListItem
   }
 
   /**
@@ -167,50 +175,52 @@ class Checklist {
    * @param {KeyboardEvent} event
    */
   appendNewElement(event) {
-    event.preventDefault();
-    const currentNode = window.getSelection().anchorNode;
-    const lastItem = this._elements.items[this._elements.items.length - 1].querySelector(`.${this.CSS.textField}`);
-    const lastItemText = lastItem.innerHTML.replace('<br>', ' ').trim();
+    event.preventDefault()
+    const currentNode = window.getSelection().anchorNode
+    const lastItem = this._elements.items[
+      this._elements.items.length - 1
+    ].querySelector(`.${this.CSS.textField}`)
+    const lastItemText = lastItem.innerHTML.replace('<br>', ' ').trim()
 
     /**
      * Prevent checklist item generation if last item is empty and get out of checklist
      */
     if (currentNode === lastItem && !lastItemText) {
       /** Insert New Block and set caret */
-      this.api.blocks.insertNewBlock();
-      event.stopPropagation();
-      return;
+      this.api.blocks.insertNewBlock()
+      event.stopPropagation()
+      return
     }
 
     /**
      * Create new checklist item
      */
-    const newItem = this.createChecklistItem();
+    const newItem = this.createChecklistItem()
 
     /**
      * Find closest checklist item
      */
-    let currentItem = currentNode.parentNode.closest(`.${this.CSS.item}`);
+    let currentItem = currentNode.parentNode.closest(`.${this.CSS.item}`)
 
     /**
      * Insert new checklist item as sibling to currently selected item
      */
-    this._elements.wrapper.insertBefore(newItem, currentItem.nextSibling);
+    this._elements.wrapper.insertBefore(newItem, currentItem.nextSibling)
 
     /**
      * Index of newly inserted checklist item
      */
-    const currentIndex = this._elements.items.indexOf(currentItem) + 1;
+    const currentIndex = this._elements.items.indexOf(currentItem) + 1
 
     /**
      * Add new checklist item to tags array
      */
-    this._elements.items.splice(currentIndex, 0, newItem);
+    this._elements.items.splice(currentIndex, 0, newItem)
 
     /**
      * Move caret to contentEditable textField of new checklist item
      */
-    this.moveCaretToEnd(newItem.querySelector(`.${this.CSS.textField}`));
+    this.moveCaretToEnd(newItem.querySelector(`.${this.CSS.textField}`))
   }
 
   /**
@@ -218,33 +228,43 @@ class Checklist {
    * @param {KeyboardEvent} event
    */
   backspace(event) {
-    const currentItem = event.target.closest(`.${this.CSS.item}`);
-    const currentIndex = this._elements.items.indexOf(currentItem);
-    const currentItemText = currentItem.querySelector(`.${this.CSS.textField}`).innerHTML.replace('<br>', ' ').trim();
-    const firstItem = this._elements.items[0];
-    const firstItemText = firstItem.querySelector(`.${this.CSS.textField}`).innerHTML.replace('<br>', ' ').trim();
+    const currentItem = event.target.closest(`.${this.CSS.item}`)
+    const currentIndex = this._elements.items.indexOf(currentItem)
+    const currentItemText = currentItem
+      .querySelector(`.${this.CSS.textField}`)
+      .innerHTML.replace('<br>', ' ')
+      .trim()
+    const firstItem = this._elements.items[0]
+    const firstItemText = firstItem
+      .querySelector(`.${this.CSS.textField}`)
+      .innerHTML.replace('<br>', ' ')
+      .trim()
 
-    if (!firstItemText ) {
-      return;
+    if (!firstItemText) {
+      return
     }
 
     /**
      * If not first checklist item and item has no text
      */
     if (currentIndex && !currentItemText) {
-      event.preventDefault();
-      currentItem.remove();
+      event.preventDefault()
+      currentItem.remove()
 
       /**
        * Delete checklist item from tags array
        */
-      this._elements.items.splice(currentIndex, 1);
+      this._elements.items.splice(currentIndex, 1)
 
       /**
        * After deleting the item, move move caret to previous item if it exists
        */
-      if (this._elements.items[currentIndex - 1]  !== 'undefined') {
-        this.moveCaretToEnd(this._elements.items[currentIndex - 1].querySelector(`.${this.CSS.textField}`));
+      if (this._elements.items[currentIndex - 1] !== 'undefined') {
+        this.moveCaretToEnd(
+          this._elements.items[currentIndex - 1].querySelector(
+            `.${this.CSS.textField}`
+          )
+        )
       }
     }
   }
@@ -254,7 +274,7 @@ class Checklist {
    * @public
    */
   save() {
-    return this.data;
+    return this.data
   }
 
   /**
@@ -268,8 +288,8 @@ class Checklist {
       item: 'cdx-checklist__item',
       itemChecked: 'cdx-checklist__item--checked',
       checkbox: 'cdx-checklist__item-checkbox',
-      textField: 'cdx-checklist__item-text'
-    };
+      textField: 'cdx-checklist__item-text',
+    }
   }
 
   /**
@@ -277,12 +297,12 @@ class Checklist {
    * @param {ChecklistData} checklistData
    */
   set data(checklistData) {
-    this._data.items = checklistData.items || [];
+    this._data.items = checklistData.items || []
 
-    const oldView = this._elements.wrapper;
+    const oldView = this._elements.wrapper
 
     if (oldView) {
-      oldView.parentNode.replaceChild(this.render(), oldView);
+      oldView.parentNode.replaceChild(this.render(), oldView)
     }
   }
 
@@ -291,20 +311,25 @@ class Checklist {
    * @return {ChecklistData}
    */
   get data() {
-    this._data.items = [];
+    this._data.items = []
 
     for (let i = 0; i < this._elements.items.length; i++) {
-      const value = this._elements.items[i].querySelector(`.${this.CSS.textField}`).innerHTML.replace('<br>', ' ').trim();
+      const value = this._elements.items[i]
+        .querySelector(`.${this.CSS.textField}`)
+        .innerHTML.replace('<br>', ' ')
+        .trim()
 
       if (value) {
         this._data.items.push({
           text: value,
-          checked: this._elements.items[i].classList.contains(this.CSS.itemChecked)
-        });
+          checked: this._elements.items[i].classList.contains(
+            this.CSS.itemChecked
+          ),
+        })
       }
     }
 
-    return this._data;
+    return this._data
   }
 
   /**
@@ -315,19 +340,19 @@ class Checklist {
    * @return {Element}
    */
   _make(tagName, classNames = null, attributes = {}) {
-    const el = document.createElement(tagName);
+    const el = document.createElement(tagName)
 
     if (Array.isArray(classNames)) {
-      el.classList.add(...classNames);
+      el.classList.add(...classNames)
     } else if (classNames) {
-      el.classList.add(classNames);
+      el.classList.add(classNames)
     }
 
     for (let attrName in attributes) {
-      el[attrName] = attributes[attrName];
+      el[attrName] = attributes[attrName]
     }
 
-    return el;
+    return el
   }
 
   /**
@@ -335,14 +360,14 @@ class Checklist {
    * @param {HTMLElement} element - contentEditable element
    */
   moveCaretToEnd(element) {
-    const range = document.createRange();
-    const selection = window.getSelection();
+    const range = document.createRange()
+    const selection = window.getSelection()
 
-    range.selectNodeContents(element);
-    range.collapse(false);
-    selection.removeAllRanges();
-    selection.addRange(range);
+    range.selectNodeContents(element)
+    range.collapse(false)
+    selection.removeAllRanges()
+    selection.addRange(range)
   }
 }
 
-module.exports = Checklist;
+module.exports = Checklist
