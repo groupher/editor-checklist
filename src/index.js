@@ -137,6 +137,10 @@ class Checklist {
    * @param event
    */
   toggleCheckbox(event) {
+    /* console.log('toggleCheckbox event: ', event) */
+    /* console.log('toggleCheckbox event.target: ', event.target) */
+    /* console.log('-----------------------------') */
+
     const checkListItem = event.target.closest(`.${this.CSS.item}`)
     const checkbox = checkListItem.querySelector(`.${this.CSS.checkbox}`)
 
@@ -187,7 +191,17 @@ class Checklist {
      */
     if (currentNode === lastItem && !lastItemText) {
       /** Insert New Block and set caret */
-      this.api.blocks.insertNewBlock()
+      const currentItem = event.target.closest(`.${this.CSS.item}`)
+      currentItem.remove()
+      this._elements.items = this._elements.items.slice(
+        0,
+        this._elements.items.length - 1
+      )
+
+      const nextBlockIndex = this.api.blocks.getCurrentBlockIndex() + 1
+      this.api.blocks.insert('paragraph', {}, {}, nextBlockIndex)
+      this.api.caret.setToBlock(nextBlockIndex, 'start')
+
       event.stopPropagation()
       return
     }
@@ -249,6 +263,7 @@ class Checklist {
      */
     if (currentIndex && !currentItemText) {
       event.preventDefault()
+      console.log('currentItem remove: ', currentItem)
       currentItem.remove()
 
       /**
